@@ -1,18 +1,18 @@
 import { Router } from 'express';
-import Truck from '../Models/Truck/truckEntry.js';
-import Invoice from '../Models/Truck/truckInvoice.js';
-import Receipt from '../Models/Truck/truckReceipt.js';
+import Boat from '../Models/Boat/boatEntry.js';
+import Invoice from '../Models/Boat/boatInvoice.js';
+import Receipt from '../Models/Boat/boatReceipt.js';
 import getNextSequence from '../Utils/getNextSequence.js';
 
 const router = Router();
 
-// 1. Register truck
+// 1. Register boat
 router.post('/register', async (req, res) => {
   try {
-    const truckId = await getNextSequence('truckId');
-    const truck = new Truck({ ...req.body, truckId });
-    await truck.save();
-    res.status(201).json(truck);
+    const boatId = await getNextSequence('boatId');
+    const boat = new Boat({ ...req.body, boatId });
+    await boat.save();
+    res.status(201).json(boat);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -21,17 +21,17 @@ router.post('/register', async (req, res) => {
 // Generate Invoice for a truck by truckId (e.g., 1000, 1001, etc.)
 router.post('/invoice/:id', async (req, res) => {
   try {
-    const truckId = parseInt(req.params.id); 
+    const boatId = parseInt(req.params.id);
 
-    const truck = await Truck.findOne({ truckId });
+    const boat = await Boat.findOne({ boatId });
 
-    if (!truck) {
-      return res.status(404).json({ error: 'Truck not found' });
+    if (!boat) {
+      return res.status(404).json({ error: 'Boat not found' });
     }
 
     // Calculate hours parked (for simplicity, use arrivalDate + arrivalTime as check-in)
    /* const now = new Date();
-    const arrival = new Date(`${truck.arrivalDate}T${truck.arrivalTime}`);
+    const arrival = new Date(`${boat.arrivalDate}T${boat.arrivalTime}`);
     const hoursParked = Math.ceil((now - arrival) / (1000 * 60 * 60)); // in hours
 
     const tariffPerBlock = 5000; // RWF per 12-hour block
@@ -46,7 +46,7 @@ router.post('/invoice/:id', async (req, res) => {
       issuedAt: now
     });
 */
-    const arrival = new Date(`${truck.arrivalDate.toISOString().split('T')[0]}T${truck.arrivalTime}`);
+    const arrival = new Date(`${boat.arrivalDate.toISOString().split('T')[0]}T${boat.arrivalTime}`);
     const now = new Date();
     const msDiff = now - arrival;
     const hours = Math.ceil(msDiff / (1000 * 60 * 60));
@@ -54,7 +54,7 @@ router.post('/invoice/:id', async (req, res) => {
     const totalAmount = blocks * 5000;
 
     const invoice = new Invoice({
-      truckId,
+      boatId,
       blocks,
       hoursParked: hours,
       amount: totalAmount,
@@ -86,14 +86,14 @@ router.post('/receipt/:invoiceId', async (req, res) => {
   }
 });
 
-// 4. Exit truck
+// 4. Exit boat
 router.put('/exit/:id', async (req, res) => {
   try {
-     const truckId = parseInt(req.params.id); 
-    console.log(`Exiting truck with ID: ${truckId}`);
-    
-    const truck = await Truck.findByIdAndUpdate(
-      truckId,
+     const boatId = parseInt(req.params.id); 
+    console.log(`Exiting boat with ID: ${boatId}`);
+
+    const boat = await Boat.findByIdAndUpdate(
+      boatId,
       { 
         exited: true, 
         exitTime: new Date(),
@@ -101,9 +101,9 @@ router.put('/exit/:id', async (req, res) => {
       },
       { new: true }
     );
-    if (!truck) return res.status(404).json({ error: 'Truck not found' });
+    if (!boat) return res.status(404).json({ error: 'Boat not found' });
 
-    res.json(truck);
+    res.json(boat);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

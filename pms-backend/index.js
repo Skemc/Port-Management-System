@@ -3,7 +3,7 @@ import express, { json } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import vesselRoutes from './Routes/vesselRoute.js';
+import BoatRoutes from './Routes/boatRoute.js';
 import truckRoutes from './Routes/truckRoute.js'
 
 
@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true
 })
 .then(() => console.log('✅ MongoDB connected'))
-.catch(err => console.log('MongoDB connection error:', err));
+.catch(err => console.log('❌ MongoDB connection error:', err));
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,15 +26,14 @@ app.use(json());
 
 // Test route
 app.get('/', (req, res) => {
-  res.send('Port Management System Backend is running');
+  res.send('🚢 Port Management System Backend is running');
 });
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
 
-// const vesselRoutes = require('./Routes/vessels');
-app.use('/api/vessels', vesselRoutes);
-// const truckRoutes = require('./Routes/trucks');
+// Routes
 app.use('/api/trucks', truckRoutes);
+app.use('/api/boats', BoatRoutes);
