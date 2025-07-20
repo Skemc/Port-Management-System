@@ -4,7 +4,8 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import BoatRoutes from './Routes/boatRoute.js';
-import truckRoutes from './Routes/truckRoute.js'
+import truckRoutes from './Routes/truckRoute.js';
+import vesselRoutes from './Routes/vesselRoute.js'
 
 
 dotenv.config();
@@ -37,3 +38,4 @@ app.listen(PORT, () => {
 // Routes
 app.use('/api/trucks', truckRoutes);
 app.use('/api/boats', BoatRoutes);
+app.use('/api/vessels', vesselRoutes);

@@ -68,6 +68,45 @@ router.post('/invoice/:id', async (req, res) => {
   }
 });
 
+// Pay extra for overstayed time
+router.post('/overstay/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const truck = await Truck.findById(id);
+    if (!truck || !truck.lastInvoicedAt) {
+      return res.status(404).json({ error: 'Truck not found or never invoiced' });
+    }
+
+    const now = new Date();
+    const diffMs = now - new Date(truck.lastInvoicedAt);
+    const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+    const blocks = Math.ceil(diffHours / 12);
+    const amountDue = blocks * 5000;
+
+    const newInvoice = new TruckInvoice({
+      truck: truck._id,
+      issuedAt: now,
+      amount: amountDue,
+    });
+    await newInvoice.save();
+
+    const newReceipt = new TruckReceipt({
+      invoice: newInvoice._id,
+      paidAt: now,
+      amountPaid: amountDue,
+    });
+    await newReceipt.save();
+
+    truck.lastInvoicedAt = now;
+    await truck.save();
+
+    res.json({ message: 'Overstay payment processed', amountDue });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 // 3. Generate receipt
 router.post('/receipt/:invoiceId', async (req, res) => {
   try {
