@@ -5,7 +5,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import BoatRoutes from './Routes/boatRoute.js';
 import truckRoutes from './Routes/truckRoute.js';
-import vesselRoutes from './Routes/vesselRoute.js'
+import vesselRoutes from './Routes/vesselRoute.js';
+import userRoutes from './Routes/userRoute.js';
+import cargoRoute from './Routes/cargoRoute.js';
 
 
 dotenv.config();
@@ -39,3 +41,5 @@ app.listen(PORT, () => {
 app.use('/api/trucks', truckRoutes);
 app.use('/api/boats', BoatRoutes);
 app.use('/api/vessels', vesselRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/cargo-storage', cargoRoute);
