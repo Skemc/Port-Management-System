@@ -1,5 +1,8 @@
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 216e1cad31338c4bbf7f02eefb6c7c50dcc5cce5
 # 🚢 Port Management System (Backend)
 
 This project is the backend of a Port Management System designed to track and manage vessels, trucks, containers, and cargo logistics.
