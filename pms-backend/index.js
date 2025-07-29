@@ -9,6 +9,8 @@ import vesselRoutes from './Routes/vesselRoute.js';
 import userRoutes from './Routes/userRoute.js';
 import cargoRoute from './Routes/cargoRoute.js';
 import dashboardRoute from './Routes/dashboardRoute.js';
+import reportRoute  from './Routes/reportRoute.js';
+import rentRoute  from './Routes/rentRoute.js';
 
 
 dotenv.config();
@@ -45,3 +47,5 @@ app.use('/api/vessels', vesselRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/cargo-storage', cargoRoute);
 app.use('/api/dashboard', dashboardRoute);
+app.use('/api/report', reportRoute);
+app.use('/api/rent', rentRoute);
